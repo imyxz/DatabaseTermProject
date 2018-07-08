@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize')
+const Mysql2 = require('mysql2/promise')
 const fs = require('fs-extra')
 const path = require('path');
 const chokidar = require('chokidar');
@@ -20,7 +21,19 @@ function ConnectDB({
     logging: Logger
   })
 }
-
+async function ConnectDBMysql2({
+  db_name,
+  username,
+  password,
+  host
+}) {
+  return await Mysql2.createConnection({
+    host: host,
+    database: db_name,
+    user: username,
+    password
+  })
+}
 async function LoadAssociation(dir, _definations) {
   let ret = {}
   let list = await fs.readdir(dir)
@@ -100,10 +113,9 @@ module.exports = async function (Config) {
     return models;
   if (Config.dev.showDBLog === true)
     Logger = (e) => console.log(e)
-  sequelize = ConnectDB(DBConfig)
-  definations = await LoadDefination(path.resolve(__dirname, 'Model', 'Defination'), sequelize)
-  models = await LoadModel(path.resolve(__dirname, 'Model'), definations)
+  connection = await ConnectDBMysql2(DBConfig)
+  models = await LoadModel(path.resolve(__dirname, 'Model'), connection)
   if (Config.dev.hotSwap === true)
-    AddHotSwappingForModels(path.resolve(__dirname, 'Model'), models, definations)
-  return {sequelize, definations, models};
+    AddHotSwappingForModels(path.resolve(__dirname, 'Model'), models, connection)
+  return {connection, models};
 }
