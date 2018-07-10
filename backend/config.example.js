@@ -10,7 +10,8 @@ module.exports = {
     db_name: ''
   },
   env: {
-    JWTKEY: ''
+    JWTKEY: '',
+    session_secret: ''
   },
   dev: {
     hotSwap: true,

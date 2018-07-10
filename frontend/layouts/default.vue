@@ -1,52 +1,63 @@
 <template>
-  <div>
-    <nuxt/>
+<el-container>
+  <div class="total-background">
+    <div class="background-cover"></div>
+    <div class="background-image"></div>
   </div>
+  <!--<el-header style="padding: 0;">
+    <common-header></common-header>
+  </el-header>-->
+  <el-main class="main-container">
+    <nuxt />
+  </el-main>
+</el-container>
 </template>
-
-<style>
-html {
-  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
+<script>
+import CommonHeader from '~/components/CommonHeader'
+export default {
+  components:{
+    CommonHeader
+  }
 }
-
-*, *:before, *:after {
-  box-sizing: border-box;
+</script>
+<style lang="scss">
+body{
   margin: 0;
 }
-
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
+.total-background{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+  .background-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('~/assets/galaxy.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+  }
+  .background-cover{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.4;
+    background-color: black;
+  }
 }
-
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
+.main-container{
+  opacity: 0.9;
 }
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
+.panel{
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
 }
 </style>

@@ -1,4 +1,8 @@
 module.exports = {
+  css: [
+    'element-ui/lib/theme-chalk/index.css',
+    '~/static/material-icon.css'
+  ],
   /*
   ** Headers of the page
   */
@@ -13,6 +17,20 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+  proxy: {
+    '/api': 'http://localhost:4567/'
+  },
+  axios: {
+    proxy: true
+    // proxyHeaders: false
+  },
+  plugins: [
+    '@/plugins/element-ui',
+    '@/plugins/GlobalEventBus'
+  ],
+  modules: [
+    '@nuxtjs/axios',
+  ],
   /*
   ** Customize the progress bar color
   */

@@ -8,6 +8,7 @@ const path = require('path');
 const ConfigLoader = require('./configLoader');
 const hotSwapping = require('./hotSwapping');
 const ExpressAsyncWrapper = require('./ExpressAsyncWrapper');
+const Errors = require('./Utils/Errors');
 (async function (){
   Config = ConfigLoader()
   //expose to global to convenient for require module
@@ -22,7 +23,8 @@ const ExpressAsyncWrapper = require('./ExpressAsyncWrapper');
     Defination: DB.definations,
     Sequelize: DB.sequelize,
     Config,
-    Wrapper: ExpressAsyncWrapper
+    Wrapper: ExpressAsyncWrapper,
+    Errors
   }
   console.info("Loading Routes....")
   let [router, routerTree] = await Router(RouterBaseDir, context)

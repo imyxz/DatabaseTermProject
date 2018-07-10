@@ -129,3 +129,10 @@ create table organization_contractor(
   foreign key (organization_id) REFERENCES organization(id),
   foreign key (contractor_id) REFERENCES outer_person(id) 
 );
+create table user (
+  id integer AUTO_INCREMENT,
+  username varchar(64) unique,
+  password varchar(64),
+  primary key(id)
+);
+insert into user (username,password) values ('admin',md5('admin'));
