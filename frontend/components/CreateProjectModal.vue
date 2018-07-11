@@ -27,7 +27,7 @@
 export default {
   data: () => {
     return {
-      dialogVisible: true,
+      dialogVisible: false,
       name: '',
       research_content: '',
       money: '',
@@ -59,6 +59,7 @@ export default {
           message: '科研项目创建成功'
         })
         this.dialogVisible = false
+        this.$emit('added')
       }
       else {
         this.$notify.error({

@@ -3,7 +3,7 @@
     <el-row class="panel">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>科研项目管理</el-breadcrumb-item>
+        <el-breadcrumb-item>研究所管理</el-breadcrumb-item>
       </el-breadcrumb>
     </el-row>
     <el-row>
@@ -12,7 +12,7 @@
           <div class="panel">
             <div>
               <i class="el-icon-search"></i>
-              <p>搜索科研项目</p>
+              <p>搜索研究所</p>
               <el-select v-model="search_keyword" filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="search" :loading="search_loading">
                 <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
@@ -20,30 +20,30 @@
             </div>
           </div>
         </div>
-        <div class="large-button"  @click="openCreateProjectModal()">
+        <div class="large-button" @click="openCreateModal()">
           <div class="panel">
             <div>
               <i class="el-icon-plus"></i>
-              <span>添加科研项目</span>
+              <span>添加研究所</span>
             </div>
           </div>
         </div>
       </el-col>
       <el-col :span="18" :offset="1" class="panel">
         <el-table :data="tableData" stripe style="width: 100%" v-loading="loading">
-          <el-table-column prop="id" label="#" width="180">
+          <el-table-column prop="name" label="名称" width="180">
           </el-table-column>
-          <el-table-column prop="name" label="项目名称" width="180">
+          <el-table-column prop="instruction" label="介绍" width="180">
           </el-table-column>
-          <el-table-column prop="research_content" label="研究内容">
+          <el-table-column prop="room_count" label="办公场所">
           </el-table-column>
-          <el-table-column prop="money" label="经费">
+          <el-table-column prop="researcher_count" label="科研人员">
           </el-table-column>
-          <el-table-column prop="work_count" label="子课题">
+          <el-table-column prop="project_count" label="项目">
           </el-table-column>
-          <el-table-column prop="start_time" label="开始时间">
+          <el-table-column prop="incharger" label="负责人">
           </el-table-column>
-          <el-table-column prop="dead_line" label="截止时间">
+          <el-table-column prop="secretary" label="秘书">
           </el-table-column>
           <el-table-column label="操作" width="100">
             <template slot-scope="scope">
@@ -57,15 +57,15 @@
         </el-row>
       </el-col>
     </el-row>
-    <create-project-modal ref="create_project_modal"></create-project-modal>
+    <create-modal ref="create_modal"></create-modal>
   </div>
 </template>
 <script>
-import CreateProjectModal from '~/components/CreateProjectModal'
+import CreateModal from '~/components/CreateLabModal'
 export default {
   data() {
     return {
-      projects: [],
+      labs: [],
       total: 0,
       page_size: 10,
       page: 1,
@@ -77,19 +77,19 @@ export default {
   },
   computed: {
     tableData() {
-      return this.projects
+      return this.labs
     },
     searchOptions() {
       return this.search_items.map(e => {
         return {
-          value: e.id,
+          value: e.name,
           label: e.name
         }
       })
     }
   },
   mounted() {
-    this.$refs.create_project_modal.$on('added', () => {
+    this.$refs.create_modal.$on('added', () => {
       this.page = 1
       this.loadData()
     })
@@ -99,20 +99,20 @@ export default {
   methods: {
     async loadData(page = 1) {
       this.loading = true
-      let result = await this.$axios.get(`/api/project/all?page=${page}`)
-      this.projects = result.data.projects
+      let result = await this.$axios.get(`/api/lab/all?page=${page}`)
+      this.labs = result.data.labs
       if (result.data.total)
         this.total = result.data.total
       this.loading = false
     },
-    openCreateProjectModal() {
-      this.$refs.create_project_modal.$emit('open')
+    openCreateModal() {
+      this.$refs.create_modal.$emit('open')
     },
     async search(keyword) {
-      let { data } = await this.$axios.get('/api/project/search?keyword=' + encodeURIComponent(keyword))
+      let { data } = await this.$axios.get('/api/lab/search?keyword=' + encodeURIComponent(keyword))
       this.search_loading = true
       if (data.status === 0) {
-        this.search_items = data.projects
+        this.search_items = data.labs
         this.search_loading = false
       }
       else {
@@ -128,11 +128,11 @@ export default {
       this.loadData(newVal)
     },
     search_keyword(newVal) {
-      this.$router.push(`/project/${newVal}/info`)
+      this.$router.push(`/lab/${encodeURIComponent(newVal)}/info`)
     }
   },
   components: {
-    CreateProjectModal
+    CreateModal
   }
 }
 </script>

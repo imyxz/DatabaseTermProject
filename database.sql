@@ -41,6 +41,9 @@ create table work (
   dead_line datetime,
   money decimal(10,2),
   requirement text,
+  sequence integer,
+  incharger_id integer,
+  foreign key (incharger_id) REFERENCES researcher(id),
   primary key (id)
 );
 create table outer_person(
@@ -68,8 +71,10 @@ create table project(
   dead_line datetime,
   principal_id integer,
   checker_id integer,
+  incharger_id integer,
   foreign key (principal_id) REFERENCES organization(id),
   foreign key (checker_id) REFERENCES organization(id),
+  foreign key (incharger_id) REFERENCES researcher(id),
   primary key (id) 
 );
 create table achievement(

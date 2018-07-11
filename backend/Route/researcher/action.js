@@ -11,12 +11,12 @@ module.exports = (router,{
     const limit = 10
     let page = parseInt(req.query.page) || 1
     let start = (page - 1) * limit
-    let projects = await Model.project.getAllProject(start,limit)
+    let researchers = await Model.researcher.getAllResearcher(start,limit)
     let ret = {
-      projects
+      researchers
     }
     if(page === 1){
-      ret.total = await Model.project.getProjectCount()
+      ret.total = await Model.researcher.getResearcherCount()
     }
     res.success(ret)
   }))
@@ -25,24 +25,30 @@ module.exports = (router,{
     let page = parseInt(req.query.page) || 1
     let keyword = req.query.keyword || ''
     let start = (page - 1) * limit
-    let projects = await Model.project.search(keyword,start,limit)
+    let researchers = await Model.researcher.search(keyword,start,limit)
     let ret = {
-      projects
+      researchers
     }
     res.success(ret)
   }))
   router.post('/create', Wrapper(async (req,res,next) => {
-    const limit = 10
     let name = req.body.name
-    let research_content = req.body.research_content
-    let money = parseFloat(req.body.money)
-    let start_time = moment(req.body.start_time)
-    let end_time = moment(req.body.end_time)
-    if(!name || !research_content || !money || !start_time.isValid() || !end_time.isValid)
+    let sex = req.body.sex
+    let title = req.body.title
+    let age = parseInt(req.body.age)
+    let major = req.body.major
+    let lab = req.body.lab
+    console.log(name,sex,title,age,major,lab)
+    if(!name || !sex || !title || !age || !major || !lab)
       throw new Errors.InvalidParameter('相关参数未填写')
-    let project_id = await Model.project.createProject(name,research_content,money,start_time.toDate(),end_time.toDate())
+    let result = await Model.lab.getLabByName(lab)
+    if(!result)
+      throw new Errors.InvalidParameter('不存在此研究所')
+    if(['male','female','secret'].indexOf(sex) === -1)
+    throw new Errors.InvalidParameter('性别未按要求填写')
+    let researcher_id = await Model.researcher.createResearcher(name,sex,age,title,major,lab)
     res.success({
-      project_id
+      researcher_id
     })
   }))
 }

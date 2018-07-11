@@ -4,6 +4,12 @@ module.exports = (connection) => {
       let [rows, fields] = await connection.execute("select *,(select count(*) from project_work where project_work.project_id = p.id) as work_count from project p order by id desc limit ?,?", [start, limit])
       return rows
     },
+    async search(keyword, start, limit) {
+      keyword = keyword.replace(/\_/g,'\\\_').replace('/%/g','\\%')
+      keyword = '%' + keyword + '%'
+      let [rows, fields] = await connection.execute("select * from project where name like ? order by id desc limit ?,?", [keyword,start, limit])
+      return rows
+    },
     async getProjectCount(){
       let [result] = await connection.execute("select count(*) from project")
       return result[0]['count(*)']
