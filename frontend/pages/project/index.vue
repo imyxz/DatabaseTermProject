@@ -8,10 +8,13 @@
     </el-row>
     <el-row>
       <el-col :span="5">
-        <div class="large-button">
-          <div><i class="el-icon-plus"></i></div>
-
-
+        <div class="large-button" @click="openCreateProjectModal()">
+          <div class="panel">
+            <div>
+              <i class="el-icon-plus"></i>
+              <span>添加科研项目</span>
+            </div>
+          </div>
         </div>
       </el-col>
       <el-col :span="18" :offset="1" class="panel">
@@ -42,10 +45,11 @@
         </el-row>
       </el-col>
     </el-row>
+    <create-project-modal ref="create_project_modal"></create-project-modal>
   </div>
-
 </template>
 <script>
+import CreateProjectModal from '~/components/CreateProjectModal'
 export default {
   data() {
     return {
@@ -72,12 +76,18 @@ export default {
       if (result.data.total)
         this.total = result.data.total
       this.loading = false
+    },
+    openCreateProjectModal() {
+      this.$refs.create_project_modal.$emit('open')
     }
   },
   watch: {
     page(newVal) {
       this.loadData(newVal)
     }
+  },
+  components: {
+    CreateProjectModal
   }
 }
 </script>
@@ -90,20 +100,28 @@ export default {
     display: flex;
     justify-content: center;
   }
-  .large-button{
+  .large-button {
     padding-bottom: 100%;
     position: relative;
-    div{
+    > div {
       position: absolute;
-      left:0;
+      left: 0;
       right: 0;
       bottom: 0;
       top: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 100px;
-      color: white;
+      text-align: center;
+      cursor: pointer;
+      i {
+        font-size: 80px;
+        color: #409eff;
+      }
+      * {
+        font-size: 20px;
+        display: block;
+      }
     }
   }
 }

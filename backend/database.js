@@ -27,7 +27,8 @@ async function ConnectDBMysql2({
   password,
   host
 }) {
-  return await Mysql2.createConnection({
+  return await Mysql2.createPool({
+    connectionLimit : 10,
     host: host,
     database: db_name,
     user: username,
