@@ -73,9 +73,11 @@ create table project(
   principal_id integer,
   checker_id integer,
   incharger_id integer,
+  lab_name varchar(64),
   foreign key (principal_id) REFERENCES organization(id),
   foreign key (checker_id) REFERENCES organization(id),
   foreign key (incharger_id) REFERENCES researcher(id),
+  foreign key (lab_name) REFERENCES laboratory(lab_name),
   primary key (id) 
 );
 create table achievement(

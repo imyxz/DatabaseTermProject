@@ -31,13 +31,15 @@
       </el-col>
       <el-col :span="18" :offset="1" class="panel">
         <el-table :data="tableData" stripe style="width: 100%" v-loading="loading">
-          <el-table-column prop="id" label="#" width="180">
+          <el-table-column prop="id" label="#">
           </el-table-column>
-          <el-table-column prop="name" label="项目名称" width="180">
+          <el-table-column prop="name" label="项目名称">
           </el-table-column>
           <el-table-column prop="research_content" label="研究内容">
           </el-table-column>
           <el-table-column prop="money" label="经费">
+          </el-table-column>
+          <el-table-column prop="lab_name" label="研究所">
           </el-table-column>
           <el-table-column prop="work_count" label="子课题">
           </el-table-column>

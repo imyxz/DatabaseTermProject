@@ -38,9 +38,13 @@ module.exports = (router,{
     let money = parseFloat(req.body.money)
     let start_time = moment(req.body.start_time)
     let end_time = moment(req.body.end_time)
-    if(!name || !research_content || !money || !start_time.isValid() || !end_time.isValid)
+    let lab_name = req.body.lab_name
+    if(!name || !research_content || !money || !start_time.isValid() || !end_time.isValid() || !lab_name)
       throw new Errors.InvalidParameter('相关参数未填写')
-    let project_id = await Model.project.createProject(name,research_content,money,start_time.toDate(),end_time.toDate())
+    let lab = await Model.lab.getLabByName(lab_name)
+    if(!lab)
+      throw new Errors.InvalidParameter('无此研究所')
+    let project_id = await Model.project.createProject(name,research_content,money,start_time.toDate(),end_time.toDate(),lab_name)
     res.success({
       project_id
     })

@@ -60,4 +60,10 @@ body{
   padding: 10px;
   margin-bottom: 20px;
 }
+.border{
+  border-style: solid;
+  border-width: 1px;
+  border-color: #66CCFF;
+  padding: 10px;
+}
 </style>

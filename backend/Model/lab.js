@@ -10,6 +10,12 @@ module.exports = (connection) => {
       let [rows, fields] = await connection.execute("select * from laboratory where name like ? order by name desc limit ?,?", [keyword,start, limit])
       return rows
     },
+    async searchResearcher(lab_name,keyword, start, limit) {
+      keyword = keyword.replace(/\_/g,'\\\_').replace('/%/g','\\%')
+      keyword = '%' + keyword + '%'
+      let [rows, fields] = await connection.execute("select * from researcher where lab_name = ? and name like ? order by name desc limit ?,?", [lab_name, keyword,start, limit])
+      return rows
+    },
     async getLabCount(){
       let [result] = await connection.execute("select count(*) from laboratory")
       return result[0]['count(*)']

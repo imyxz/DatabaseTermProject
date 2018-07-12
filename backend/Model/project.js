@@ -1,7 +1,11 @@
 module.exports = (connection) => {
   return {
     async getAllProject(start, limit) {
-      let [rows, fields] = await connection.execute("select *,(select count(*) from project_work where project_work.project_id = p.id) as work_count from project p order by id desc limit ?,?", [start, limit])
+      let [rows, fields] = await connection.execute("select *,\
+      (select count(*) from project_work where project_work.project_id = p.id) as work_count,\
+      (select count(*) from achievement where achievement.project_id = p.id) as achievement_count,\
+      (select count(distinct researcher.id) from researcher,work,work_researcher,project_work where project_work.project_id = p.id and work.id = project_work.work_id and work_researcher.work_id = work.id and researcher.id = work_researcher.researcher_id) as researcher_count,\
+      (select name from researcher where researcher.id = p.incharger_id) as incharger_name from project p order by id desc limit ?,?", [start, limit])
       return rows
     },
     async search(keyword, start, limit) {
@@ -39,8 +43,8 @@ module.exports = (connection) => {
       else
         return rows[0]
     }, 
-    async createProject(name,research_content,money,start_time,dead_line){
-      let [result] = await connection.execute("insert into project set name = ?, research_content = ?, money = ?, start_time = ?, dead_line = ?",[name,research_content,money,start_time,dead_line])
+    async createProject(name,research_content,money,start_time,dead_line,lab_name){
+      let [result] = await connection.execute("insert into project set name = ?, research_content = ?, money = ?, start_time = ?, dead_line = ?,lab_name = ?",[name,research_content,money,start_time,dead_line,lab_name])
       if(result && result.warningStatus === 0)
       {
         return result.insertId
