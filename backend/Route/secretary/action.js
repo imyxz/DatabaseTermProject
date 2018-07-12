@@ -11,12 +11,12 @@ module.exports = (router,{
     const limit = 10
     let page = parseInt(req.query.page) || 1
     let start = (page - 1) * limit
-    let researchers = await Model.researcher.getAllResearcher(start,limit)
+    let secretarys = await Model.secretary.getAllSecretary(start,limit)
     let ret = {
-      researchers
+      secretarys
     }
     if(page === 1){
-      ret.total = await Model.researcher.getResearcherCount()
+      ret.total = await Model.secretary.getSecretaryCount()
     }
     res.success(ret)
   }))
@@ -25,29 +25,25 @@ module.exports = (router,{
     let page = parseInt(req.query.page) || 1
     let keyword = req.query.keyword || ''
     let start = (page - 1) * limit
-    let researchers = await Model.researcher.search(keyword,start,limit)
+    let secretarys = await Model.secretary.search(keyword,start,limit)
     let ret = {
-      researchers
+      secretarys
     }
     res.success(ret)
   }))
   router.post('/create', Wrapper(async (req,res,next) => {
     let name = req.body.name
     let sex = req.body.sex
-    let title = req.body.title
+    let responsibility = req.body.responsibility
     let age = parseInt(req.body.age)
-    let major = req.body.major
-    let lab = req.body.lab
-    if(!name || !sex || !title || !age || !major || !lab)
+    let hired_time = moment(req.body.hired_time)
+    if(!name || !sex || !responsibility || !age || !hired_time.isValid())
       throw new Errors.InvalidParameter('相关参数未填写')
-    let result = await Model.lab.getLabByName(lab)
-    if(!result)
-      throw new Errors.InvalidParameter('不存在此研究所')
     if(['male','female','secret'].indexOf(sex) === -1)
-      throw new Errors.InvalidParameter('性别未按要求填写')
-    let researcher_id = await Model.researcher.createResearcher(name,sex,age,title,major,lab)
+    throw new Errors.InvalidParameter('性别未按要求填写')
+    let secretary_id = await Model.secretary.createSecretary(name,sex,age,responsibility,hired_time.toDate())
     res.success({
-      researcher_id
+      secretary_id
     })
   }))
 }

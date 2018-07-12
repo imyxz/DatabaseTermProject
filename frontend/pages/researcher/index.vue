@@ -154,6 +154,7 @@ export default {
   .pagination {
     display: flex;
     justify-content: center;
+    margin-top: 10px;
   }
   .large-button {
     padding-bottom: 100%;

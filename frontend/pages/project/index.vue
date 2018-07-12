@@ -20,7 +20,7 @@
             </div>
           </div>
         </div>
-        <div class="large-button"  @click="openCreateProjectModal()">
+        <div class="large-button" @click="openCreateProjectModal()">
           <div class="panel">
             <div>
               <i class="el-icon-plus"></i>
@@ -40,6 +40,12 @@
           <el-table-column prop="money" label="经费">
           </el-table-column>
           <el-table-column prop="work_count" label="子课题">
+          </el-table-column>
+          <el-table-column prop="work_count" label="负责人">
+          </el-table-column>
+          <el-table-column prop="work_count" label="科研人员">
+          </el-table-column>
+          <el-table-column prop="work_count" label="科研成果">
           </el-table-column>
           <el-table-column prop="start_time" label="开始时间">
           </el-table-column>
@@ -144,6 +150,7 @@ export default {
   .pagination {
     display: flex;
     justify-content: center;
+    margin-top: 10px;
   }
   .large-button {
     padding-bottom: 100%;

@@ -5,6 +5,7 @@ create table secretary (
   age integer,
   hired_time datetime,
   end_time datetime,
+  responsibility text,
   primary key (id)
 );
 create table laboratory (
@@ -80,7 +81,7 @@ create table project(
 create table achievement(
   id integer AUTO_INCREMENT,
   name varchar(64),
-  type enum('invention', 'utility' ,'design') default 'invention',
+  type enum('paper','software','patent_invention', 'patent_utility' ,'patent_design') default 'paper',
   time datetime,
   rank integer,
   project_id integer,
