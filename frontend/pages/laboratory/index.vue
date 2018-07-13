@@ -126,7 +126,7 @@ export default {
       this.loadData(newVal)
     },
     search_keyword(newVal) {
-      this.$router.push(`/lab/${encodeURIComponent(newVal)}/info`)
+      this.$router.push(`/laboratory/${encodeURIComponent(newVal)}/info`)
     }
   },
   components: {
