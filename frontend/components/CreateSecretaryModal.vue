@@ -23,13 +23,14 @@
         </el-date-picker>
       </el-row>
       <el-row type="flex" justify="end" style="margin-top: 10px;">
-        <el-button type="success" round @click="create">创建</el-button>
+        <el-button type="success" round @click="create">{{this.update===true?'更新':'创建'}}</el-button>
       </el-row>
     </el-row>
   </el-dialog>
 </template>
 <script>
 export default {
+  props: ['update', 'id'],
   data: () => {
     return {
       dialogVisible: false,
@@ -73,10 +74,15 @@ export default {
       this.dialogVisible = false
     })
     this.loadLabs('')
+    if (this.update) {
+      this.loadData(this.id)
+    }
   },
   methods: {
     async create() {
-      let { data } = await this.$axios.post('/api/secretary/create', {
+      let target = this.update === true ? `/api/secretary/${this.id}/update` : '/api/secretary/create'
+
+      let { data } = await this.$axios.post(target, {
         name: this.name,
         sex: this.sex,
         responsibility: this.responsibility,
@@ -111,6 +117,15 @@ export default {
           message: data.err_msg
         })
       }
+    },
+    async loadData(id) {
+      let { data } = await this.$axios.get(`/api/secretary/${id}/info`)
+      let that = this
+      Object.getOwnPropertyNames(data.secretary).forEach(e => {
+        if (that[e] !== undefined)
+          that[e] = data.secretary[e]
+      })
+
     }
   }
 }

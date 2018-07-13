@@ -39,12 +39,15 @@ module.exports = (router,{
     let start_time = moment(req.body.start_time)
     let end_time = moment(req.body.end_time)
     let lab_name = req.body.lab_name
-    if(!name || !research_content || !money || !start_time.isValid() || !end_time.isValid() || !lab_name)
+    let incharger_id = req.body.incharger_id
+    let principal_id = req.body.principal_id
+    let checker_id = req.body.checker_id
+    if(!name || !research_content || !money || !start_time.isValid() || !end_time.isValid() || !lab_name || !incharger_id || !principal_id || !checker_id)
       throw new Errors.InvalidParameter('相关参数未填写')
     let lab = await Model.lab.getLabByName(lab_name)
     if(!lab)
       throw new Errors.InvalidParameter('无此研究所')
-    let project_id = await Model.project.createProject(name,research_content,money,start_time.toDate(),end_time.toDate(),lab_name)
+    let project_id = await Model.project.createProject(name,research_content,money,start_time.toDate(),end_time.toDate(),lab_name,incharger_id,principal_id,checker_id)
     res.success({
       project_id
     })

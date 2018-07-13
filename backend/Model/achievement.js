@@ -30,6 +30,23 @@ module.exports = (connection) => {
       else {
         return false
       }
+    },
+    async updateAchievement(id,name,time,rank,project_id,type){
+      let [result] = await connection.execute("update achievement set name=?,time=?,rank=?,project_id=?,type=? where id = ?",[name,time,rank,project_id,type,id])
+    },
+    async getAllParticipant(id){
+      let [rows,fields] = await connection.execute("select researcher.* from researcher,achievement_participant where achievement_participant.achievement_id = ? and researcher.id = achievement_participant.researcher_id",[id])
+      return rows
+    },
+    async addParticipant(achievement_id,researcher_id){
+      await connection.execute("insert into achievement_participant set achievement_id = ? , researcher_id=?",[achievement_id,researcher_id])
+    },
+    async delAllParticipant(achievement_id){
+      await connection.execute("delete from achievement_participant where achievement_id = ?",[achievement_id])
+    },
+    async del(id)
+    {
+      await connection.execute("delete from achievement where id = ?",[id])
     }
   }
 }

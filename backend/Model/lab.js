@@ -1,7 +1,10 @@
 module.exports = (connection) => {
   return {
     async getAllLab(start, limit) {
-      let [rows, fields] = await connection.execute("select *,(select count(*) from room where room.lab_name = lab.name) as room_count,(select count(*) from researcher where researcher.lab_name = lab.name) as researcher_count,(select count(*) from project,researcher where researcher.lab_name = lab.name and project.incharger_id = researcher.id) as project_count from laboratory lab order by name desc limit ?,?", [start, limit])
+      let [rows, fields] = await connection.execute("select *,(select count(*) from room where room.lab_name = lab.name) as room_count,\
+      (select count(*) from researcher where researcher.lab_name = lab.name) as researcher_count,\
+      (select count(*) from project where lab_name = lab.name) as project_count,\
+      (select name from secretary where secretary.id = lab.sec_id) as secretary_name from laboratory lab order by name desc limit ?,?", [start, limit])
       return rows
     },
     async searchLab(keyword, start, limit) {
@@ -21,14 +24,15 @@ module.exports = (connection) => {
       return result[0]['count(*)']
     },
     async getLabByName(name) {
-      let [rows, fields] = await connection.execute("select * from laboratory where name = ? limit 1", [name])
+      let [rows, fields] = await connection.execute("select *,\
+      (select name from secretary where secretary.id = lab.sec_id) as secretary_name from laboratory lab where lab.name = ? limit 1", [name])
       if (rows.length === 0)
         return false
       else
         return rows[0]
     },
-    async createLab(name,sex,age,title,major,lab_name){
-      let [result] = await connection.execute("insert into laboratory set name = ?, sex=?,age =?, title=?,major=?,lab_name =?",[name,sex,age,title,major,lab_name])
+    async createLab(name,instruction,sec_id){
+      let [result] = await connection.execute("insert into laboratory set name = ?, instruction=?,sec_id=?",[name,instruction,sec_id])
       if(result && result.warningStatus === 0)
       {
         return result.insertId
@@ -36,6 +40,9 @@ module.exports = (connection) => {
       else {
         return false
       }
+    },
+    async updateLab(name,instruction,sec_id){
+      let [result] = await connection.execute("update laboratory set instruction=?,sec_id=? where name =? ",[instruction,sec_id,name])
     }
   }
 }

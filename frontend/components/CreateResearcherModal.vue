@@ -29,13 +29,14 @@
         </el-select>
       </el-row>
       <el-row type="flex" justify="end" style="margin-top: 10px;">
-        <el-button type="success" round @click="create">创建</el-button>
+        <el-button type="success" round @click="create">{{this.update===true?'更新':'创建'}}</el-button>
       </el-row>
     </el-row>
   </el-dialog>
 </template>
 <script>
 export default {
+  props: ['update', 'id'],
   data: () => {
     return {
       dialogVisible: false,
@@ -81,10 +82,15 @@ export default {
       this.dialogVisible = false
     })
     this.loadLabs('')
+    if (this.update) {
+      this.loadData(this.id)
+    }
   },
   methods: {
     async create() {
-      let { data } = await this.$axios.post('/api/researcher/create', {
+      let target = this.update === true ? `/api/researcher/${this.id}/update` : '/api/researcher/create'
+
+      let { data } = await this.$axios.post(target, {
         name: this.name,
         sex: this.sex,
         title: this.title,
@@ -120,6 +126,14 @@ export default {
           message: data.err_msg
         })
       }
+    },
+    async loadData(id) {
+      let { data } = await this.$axios.get(`/api/researcher/${id}/info`)
+      let that = this
+      Object.getOwnPropertyNames(data.researcher).forEach(e => {
+        if (that[e] !== undefined)
+          that[e] = data.researcher[e]
+      })
     }
   }
 }

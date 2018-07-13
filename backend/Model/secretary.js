@@ -30,6 +30,14 @@ module.exports = (connection) => {
       else {
         return false
       }
+    },
+    async updateSecretary(id,name,sex,age,responsibility,hired_time){
+      let [result] = await connection.execute("update secretary set name = ?, sex=?,age =?, responsibility=?,hired_time =? where id = ?",[name,sex,age,responsibility,hired_time,id])
+
+    },
+    async del(id)
+    {
+      await connection.execute("delete from secretary where id = ?",[id])
     }
   }
 }

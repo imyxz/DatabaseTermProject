@@ -7,6 +7,7 @@
       <el-table-column v-for="(col,index) in cols" :key="index" :prop="col.prop" :label="col.label"></el-table-column>
       <el-table-column label="操作" width="100">
         <template slot-scope="scope">
+          <el-button type="text" size="small"  @click="goView(scope.row)" v-if="viewable">查看</el-button>
           <el-button type="text" size="small" @click="del(scope.$index)">删除</el-button>
           <el-button type="text" size="small">编辑</el-button>
         </template>
@@ -16,7 +17,7 @@
 </template>
 <script>
 export default {
-  props: ['name', 'cols', 'dataFetchUrl', 'dataFetchProp', 'dataSaveUrl'],
+  props: ['name', 'cols', 'dataFetchUrl', 'dataFetchProp', 'dataSaveUrl','viewable','onView'],
   /*
     col{
       prop,
@@ -37,6 +38,9 @@ export default {
     },
     del(index) {
       this.fetchedData.splice(index, 1)
+    },
+    goView(row){
+      this.$router.push(this.onView(row))
     }
   },
   computed: {
@@ -49,13 +53,15 @@ export default {
       let tmp = JSON.parse(JSON.stringify(context))
       this.fetchedData.push(tmp)
     })
-    this.$on('save', () => {
+    this.$on('save', (cb) => {
       this.$axios.post(this.dataSaveUrl, this.fetchedData).then(e => {
         if (e.data.status == 0) {
           this.$notify.success({
             'title': '成功',
             'message': "保存成功"
           })
+          if(typeof cb == "function")
+            cb()
         }
         else {
           this.$notify.error({

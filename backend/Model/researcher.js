@@ -30,6 +30,13 @@ module.exports = (connection) => {
       else {
         return false
       }
+    },
+    async updateResearcher(id,name,sex,age,title,major,lab_name){
+      let [result] = await connection.execute("update researcher set name = ?, sex=?,age =?, title=?,major=?,lab_name =? where id = ?",[name,sex,age,title,major,lab_name,id])
+    },
+    async del(id)
+    {
+      await connection.execute("delete from researcher where id = ?",[id])
     }
   }
 }

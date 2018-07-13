@@ -19,7 +19,10 @@ module.exports = (connection) => {
       return result[0]['count(*)']
     },
     async getProjectById(id) {
-      let [rows, fields] = await connection.execute("select * from project where id = ? limit 1", [id])
+      let [rows, fields] = await connection.execute("select *,\
+      (select name from researcher where researcher.id = p.incharger_id) as incharger_name,\
+      (select name from organization where organization.id = p.principal_id) as principal_name,\
+      (select name from organization where organization.id = p.checker_id) as checker_name\ from project p where id = ? limit 1", [id])
       if (rows.length === 0)
         return false
       else
@@ -43,8 +46,8 @@ module.exports = (connection) => {
       else
         return rows[0]
     }, 
-    async createProject(name,research_content,money,start_time,dead_line,lab_name){
-      let [result] = await connection.execute("insert into project set name = ?, research_content = ?, money = ?, start_time = ?, dead_line = ?,lab_name = ?",[name,research_content,money,start_time,dead_line,lab_name])
+    async createProject(name,research_content,money,start_time,dead_line,lab_name,incharger_id,principal_id,checker_id){
+      let [result] = await connection.execute("insert into project set name = ?, research_content = ?, money = ?, start_time = ?, dead_line = ?,lab_name = ?,incharger_id= ?,principal_id= ?,checker_id= ?",[name,research_content,money,start_time,dead_line,lab_name,incharger_id,principal_id,checker_id])
       if(result && result.warningStatus === 0)
       {
         return result.insertId
@@ -52,6 +55,14 @@ module.exports = (connection) => {
       else {
         return false
       }
+    },
+    async updateProject(id,name,research_content,money,start_time,dead_line,lab_name,incharger_id,principal_id,checker_id){
+      let [result] = await connection.execute("update project set name = ?, research_content = ?, money = ?, start_time = ?, dead_line = ?,lab_name = ?,incharger_id= ?,principal_id= ?,checker_id= ? where id =?",[name,research_content,money,start_time,dead_line,lab_name,incharger_id,principal_id,checker_id,id])
+      
+    },
+    async del(id)
+    {
+      await connection.execute("delete from project where id = ?",[id])
     }
   }
 }

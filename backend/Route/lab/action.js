@@ -34,20 +34,21 @@ module.exports = (router,{
   router.post('/create', Wrapper(async (req,res,next) => {
     const limit = 10
     let name = req.body.name
-    let sex = req.body.sex
-    let title = req.body.title
-    let age = parseInt(req.body.age)
-    let major = req.body.major
-    let lab = req.body.lab
-    if(!name || !sex || !title || !age || !major || !lab)
+    let instruction = req.body.instruction
+    let sec_id = parseInt(req.body.sec_id)
+    if(!name || !instruction || !sec_id)
       throw new Errors.InvalidParameter('相关参数未填写')
     
-    let result = await Model.lab.getLabByName(lab)
+    let result = await Model.secretary.getSecretaryById(sec_id)
     if(!result)
-      throw new Errors.InvalidParameter('不存在此研究所')
-    let project_id = await Model.project.createProject(name,research_content,money,start_time.toDate(),end_time.toDate())
+      throw new Errors.InvalidParameter('不存在此秘书')
+    result = await Model.lab.getLabByName(name)
+    if(result){
+      throw new Errors.InvalidParameter('研究室名称已存在')
+    }
+    await Model.lab.createLab(name,instruction,sec_id)
     res.success({
-      project_id
+      name
     })
   }))
 }

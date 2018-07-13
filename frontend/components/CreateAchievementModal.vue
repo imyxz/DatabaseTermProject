@@ -29,13 +29,14 @@
         </el-input-number>
       </el-row>
       <el-row type="flex" justify="end" style="margin-top: 10px;">
-        <el-button type="success" round @click="create">创建</el-button>
+        <el-button type="success" round @click="create">{{this.update===true?'更新':'创建'}}</el-button>
       </el-row>
     </el-row>
   </el-dialog>
 </template>
 <script>
 export default {
+  props: ['update', 'id'],
   data: () => {
     return {
       dialogVisible: false,
@@ -96,10 +97,15 @@ export default {
       this.dialogVisible = false
     })
     this.loadProjects('')
+    if (this.update) {
+      this.loadData(this.id)
+    }
   },
   methods: {
     async create() {
-      let { data } = await this.$axios.post('/api/achievement/create', {
+      let target = this.update === true ? `/api/achievement/${this.id}/update` : '/api/achievement/create'
+
+      let { data } = await this.$axios.post(target, {
         name: this.name,
         time: this.time,
         rank: this.rank,
@@ -148,6 +154,14 @@ export default {
           message: data.err_msg
         })
       }
+    },
+    async loadData(id) {
+      let { data } = await this.$axios.get(`/api/achievement/${id}/info`)
+      let that = this
+      Object.getOwnPropertyNames(data.achievement).forEach(e => {
+        if (that[e] !== undefined)
+          that[e] = data.achievement[e]
+      })
     }
   }
 }

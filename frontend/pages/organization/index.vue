@@ -37,7 +37,7 @@
           </el-table-column>
           <el-table-column prop="address" label="地址">
           </el-table-column>
-          <el-table-column prop="incharger" label="负责人">
+          <el-table-column prop="incharger_name" label="负责人">
           </el-table-column>
           <el-table-column prop="contractor_count" label="联系人">
           </el-table-column>
@@ -49,8 +49,7 @@
           </el-table-column>
           <el-table-column label="操作" width="100">
             <template slot-scope="scope">
-              <el-button type="text" size="small">查看</el-button>
-              <el-button type="text" size="small">编辑</el-button>
+              <nuxt-link size="small" :to="'/organization/' + scope.row.id + '/info'">查看</nuxt-link>
             </template>
           </el-table-column>
         </el-table>

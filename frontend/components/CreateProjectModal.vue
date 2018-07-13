@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新建科研项目" :visible.sync="dialogVisible" width="500px" class="modal-container" :append-to-body="true">
+  <el-dialog title="科研项目" :visible.sync="dialogVisible" width="500px" class="modal-container" :append-to-body="true">
     <el-row v-loading="loading">
       <el-input placeholder="" v-model="name" class="form-input">
         <template slot="prepend">项目名称</template>
@@ -21,8 +21,20 @@
         <span class="prepand" style="width: 42px;">研究所</span>
         <search-selector v-model="lab_name" placeholder="搜索研究所" searchUrl="/api/lab/search?keyword=" searchProp="labs" searchValue="name" searchLabel="name"></search-selector>
       </el-row>
+      <el-row type="flex" class="margin-10">
+        <span class="prepand" style="width: 42px;">负责人</span>
+        <search-selector v-model="incharger_id" placeholder="搜索科研人员" searchUrl="/api/researcher/search?keyword=" searchProp="researchers" searchValue="id" searchLabel="name"></search-selector>
+      </el-row>
+            <el-row type="flex" class="margin-10">
+        <span class="prepand" style="width: 42px;">委托方</span>
+        <search-selector v-model="principal_id" placeholder="搜索机构" searchUrl="/api/organization/search?keyword=" searchProp="organizations" searchValue="id" searchLabel="name"></search-selector>
+      </el-row>
+            <el-row type="flex" class="margin-10">
+        <span class="prepand" style="width: 42px;">质检方</span>
+        <search-selector v-model="checker_id" placeholder="搜索机构" searchUrl="/api/organization/search?keyword=" searchProp="organizations" searchValue="id" searchLabel="name"></search-selector>
+      </el-row>
       <el-row type="flex" justify="end" style="margin-top: 10px;">
-        <el-button type="success" round @click="create">创建</el-button>
+        <el-button type="success" round @click="create">{{this.update===true?'更新':'创建'}}</el-button>
       </el-row>
     </el-row>
   </el-dialog>
@@ -30,7 +42,8 @@
 <script>
 import SearchSelector from '~/components/SearchSelector'
 export default {
-  components:{
+  props: ['update','id'],
+  components: {
     SearchSelector
   },
   data: () => {
@@ -41,12 +54,19 @@ export default {
       money: '',
       time_range: ['', ''],
       lab_name: '',
+      incharger_id: '',
+      principal_id: '',
+      checker_id: '',
       loading: false
     }
   },
   mounted() {
     this.$on('open', () => {
       this.dialogVisible = true
+      if(this.update)
+      {
+        this.loadData(this.id)
+      }
     })
     this.$on('close', () => {
       this.dialogVisible = false
@@ -54,13 +74,17 @@ export default {
   },
   methods: {
     async create() {
-      let { data } = await this.$axios.post('/api/project/create', {
+      let target = this.update === true?`/api/project/${this.id}/update` : '/api/project/create'
+      let { data } = await this.$axios.post(target, {
         name: this.name,
         research_content: this.research_content,
         money: this.money,
         start_time: this.time_range[0],
         end_time: this.time_range[1],
-        lab_name: this.lab_name
+        lab_name: this.lab_name,
+        incharger_id: this.incharger_id,
+        principal_id: this.principal_id,
+        checker_id: this.checker_id
       })
       if (data.status === 0) {
         this.$notify.success({
@@ -76,6 +100,15 @@ export default {
           message: data.err_msg
         })
       }
+    },
+    async loadData(id){
+      let {data} = await this.$axios.get( `/api/project/${id}/info`)
+      let that = this
+      Object.getOwnPropertyNames(data.project).forEach(e => {
+        if(that[e] !== undefined)
+          that[e] = data.project[e]
+      })
+
     }
   },
   computed: {

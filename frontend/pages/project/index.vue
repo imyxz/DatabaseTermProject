@@ -43,20 +43,17 @@
           </el-table-column>
           <el-table-column prop="work_count" label="子课题">
           </el-table-column>
-          <el-table-column prop="work_count" label="负责人">
+          <el-table-column prop="incharger_name" label="负责人">
           </el-table-column>
-          <el-table-column prop="work_count" label="科研人员">
-          </el-table-column>
-          <el-table-column prop="work_count" label="科研成果">
+          <el-table-column prop="researcher_count" label="科研人员">
           </el-table-column>
           <el-table-column prop="start_time" label="开始时间">
           </el-table-column>
           <el-table-column prop="dead_line" label="截止时间">
           </el-table-column>
-          <el-table-column label="操作" width="100">
+          <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" size="small">查看</el-button>
-              <el-button type="text" size="small">编辑</el-button>
+              <nuxt-link size="small" :to="'/project/' + scope.row.id + '/info'">查看</nuxt-link>
             </template>
           </el-table-column>
         </el-table>
