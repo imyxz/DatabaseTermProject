@@ -32,6 +32,7 @@ const Errors = require('./Utils/Errors');
   console.info("Done!\n")
   let app = express()
   app.use('/', router)
+  app.use(express.static('public'))
   app.listen(Config.server.port, () => {
     console.info(`Server started at http://localhost:${Config.server.port}${Config.server.prefix || '/'}`)
   })
