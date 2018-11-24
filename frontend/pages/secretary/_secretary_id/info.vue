@@ -58,7 +58,7 @@ export default {
     openModal() {
       this.$refs.create_modal.$emit('open')
       this.$refs.create_modal.$on('added', () => {
-        location.reload()
+        this.loadData()
       })
     },
     async del() {

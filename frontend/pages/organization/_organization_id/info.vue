@@ -116,7 +116,7 @@ export default {
     },
     savePerson() {
       this.$refs.person_list.$emit('save', () => {
-        location.reload()
+        this.loadOrganization()
       })
     },
     async del() {
@@ -139,7 +139,7 @@ export default {
     openModal() {
       this.$refs.create_modal.$emit('open')
       this.$refs.create_modal.$on('added', () => {
-        location.reload()
+        this.loadOrganization()
       })
     }
   },

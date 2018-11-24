@@ -98,7 +98,7 @@ export default {
     },
     savePart() {
       this.$refs.researcher_list.$emit('save', () => {
-        location.reload()
+        this.loadData()
       })
     },
   },

@@ -94,7 +94,7 @@ export default {
     },
     saveRoom() {
       this.$refs.room_list.$emit('save', () => {
-        location.reload()
+        this.loadLab()
       })
     },
     async del() {
@@ -117,7 +117,7 @@ export default {
     openModal() {
       this.$refs.create_modal.$emit('open')
       this.$refs.create_modal.$on('added', () => {
-        location.reload()
+        this.loadLab()
       })
     }
   },

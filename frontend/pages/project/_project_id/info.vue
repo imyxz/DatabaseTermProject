@@ -169,7 +169,7 @@ export default {
     },
     saveWork() {
       this.$refs.work_list.$emit('save', () => {
-        location.reload()
+        this.loadProject()
       })
     },
     addPart() {
@@ -177,7 +177,7 @@ export default {
     },
     savePart() {
       this.$refs.part_list.$emit('save', () => {
-        location.reload()
+        this.loadProject()
       })
     },
     async del() {
@@ -200,7 +200,7 @@ export default {
     openModal() {
       this.$refs.create_modal.$emit('open')
       this.$refs.create_modal.$on('added', () => {
-        location.reload()
+        this.loadProject()
       })
     }
   },
